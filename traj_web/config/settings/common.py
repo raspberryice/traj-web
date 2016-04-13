@@ -33,6 +33,8 @@ DJANGO_APPS = (
 
     # Admin
     'django.contrib.admin',
+    #GIS 
+    'django.contrib.gis',
 )
 THIRD_PARTY_APPS = (
     'crispy_forms',  # Form layouts
@@ -44,7 +46,7 @@ THIRD_PARTY_APPS = (
 # Apps specific for this project go here.
 LOCAL_APPS = (
     'traj_web.users',  # custom users app
-    # Your stuff: custom apps go here
+    'traj_web.gpsdata',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -110,7 +112,7 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'Asia/Beijing'
+TIME_ZONE = 'Asia/Shanghai'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = 'en-us'

@@ -1,2 +1,5 @@
 #virtualenv folder
 venv/
+#keys and user info
+*.inf
+

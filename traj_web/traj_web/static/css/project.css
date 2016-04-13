@@ -36,3 +36,5 @@
 [hidden][style="display: block;"] {
   display: block !important;
 }
+
+#shanghaimap { height: 400px; }
