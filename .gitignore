@@ -2,4 +2,6 @@
 venv/
 #keys and user info
 *.inf
+#sublime text 
+*.sublime-project
 
