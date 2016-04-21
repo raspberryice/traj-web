@@ -1,8 +1,11 @@
 //add map layer
-var mymap = L.map('shanghaimap').setView([121.6, 31.2], 13);
+var mymap = L.map('shanghaimap').setView([31.22,121.49], 13);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(mymap);
 //add marker
-var marker = L.marker([121.6, 31.2]).addTo(mymap);
+var marker = L.marker([31.22,121.49]).addTo(mymap);
+
+//selection
+var selection = [];
 
 //listen to click events 
 mymap.on('click',function(e){
@@ -22,11 +25,9 @@ function search_by_id(search_id){
 			"search_id":search_id,
 		},
 		success:function(json){
-			console.log(json);
-			var line = json.line;
-			// add_traj(json.line);
-			//draw_line(json.line);
-			//draw_points(json.points);
+			var line = JSON.parse(json.line);//as an object
+			add_geojson(line);
+			//what about points?
 		},
 		error:function(xhr,errmsg,err){
 			console.log(xhr.status + ': '+xhr.responseText);
@@ -37,7 +38,7 @@ function search_by_id(search_id){
 $('#id-search-form').on('submit',function(e){
 	e.preventDefault();
 	if ($('#search-id').val()==''){
-		alert("Please enter an integer!")
+		alert("Please enter an integer!");
 	}
 	else{
 		var search_id = parseInt($('#search-id').val());
@@ -45,9 +46,13 @@ $('#id-search-form').on('submit',function(e){
 	}
 });
 
-function add_traj(geojson){
-	L.geoJson(geojson,{
-
+function add_geojson(data){
+	L.geoJson(data,{
+		onEachFeature:function(feature,layer){
+			feature.on('click',function(e){
+				selection.add(feature);
+			});
+		}
 	}).addTo(mymap);
 
 }
