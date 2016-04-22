@@ -43,6 +43,7 @@
 		    	<h3> Circular Range </h3>
 				<p>Click on any point in the map to select.</p>
 				<form class="form-horizontal" id="point-search-form">
+					{% csrf_token %}
 					<div class="form-group">
 						<label class="col-sm-3 control-label"> latitude</label>
 						<div class="col-sm-9">
@@ -56,9 +57,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Diameter</label>
+						<label class="col-sm-3 control-label">Radius</label>
 						<div class="col-sm-9">
-							<input type="number" class="form-control"  id = "diameter">
+							<input type="number" class="form-control"  id = "radius">
 						</div>
 					</div>
 					<div class="form-group">

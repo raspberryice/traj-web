@@ -7,13 +7,7 @@ var marker = L.marker([31.22,121.49]).addTo(mymap);
 //selection
 var selection = [];
 
-//listen to click events 
-mymap.on('click',function(e){
-	$('#point-latitude').val(e.latlng.lat);
-	$('#point-longitude').val(e.latlng.lng);
-
-});
-
+//-----------id search-----------------------
 
 //search by id 
 function search_by_id(search_id){	
@@ -47,12 +41,32 @@ $('#id-search-form').on('submit',function(e){
 });
 
 function add_geojson(data){
-	L.geoJson(data,{
-		onEachFeature:function(feature,layer){
-			feature.on('click',function(e){
-				selection.add(feature);
-			});
-		}
-	}).addTo(mymap);
-
+	var layer = L.geoJson(data).addTo(mymap);
+	//crop map
+	mymap.fitBounds(layer.getBounds()); 
 }
+
+
+//--------------------range search----------------------
+//listen to click events 
+var flag=false;
+var center;
+mymap.on('click',function(e,flag){
+	if (!flag){
+		$('#point-latitude').val(e.latlng.lat);
+		$('#point-longitude').val(e.latlng.lng);
+		$('#radius').val('');
+		center = e.latlng;
+		flag= true;
+		return;
+	}
+	else{
+		//get distance 
+		var dis = Math.sqrt((center.lat - e.latlng.lat)^2 + (center.lng - e.latlng.lng)^2);
+		L.circle(center,dis).addTo(mymap);
+		$('#radius').val(dis);
+		flag = false;
+		return;
+	}	
+});
+

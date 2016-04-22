@@ -17,16 +17,21 @@ class MapView(View):
 	def get(self,request):
 		return render(request,"gpsdata\map.html",{})
 
-class ExactSearchView(View):
-	model = TrajLine
-	q = TrajLine.objects.annotate(json=AsGeoJSON('geom'))
 
+class TrajSearchView(View):
+	model = TrajLine 
+	q = TrajLine.objects.all()
+
+
+class ExactSearchView(TrajSearchView):
+	
 	def get(self,request):
 		id = request.GET["search_id"]
 		traj = self.q.get(traj_id = id)
 		points = TrajPoint.objects.filter(traj_id =id)
 		response = {}
-		response['line'] = traj.json
+		response['line'] = serialize('geojson',traj)
+		#TODO serialize time 
 		# response['start_time'] = traj.start_time
 		# response['end_time'] = traj.end_time 
 		response['points'] = serialize('geojson',points)
@@ -34,4 +39,21 @@ class ExactSearchView(View):
 			json.dumps(response),
 			content_type="application/json",
 			)
+
+
+class RangeSearchView(TrajSearchView):
+	def get(self,request):
+		# lat = request.GET['latitude']
+		# lng = request.GET['longitude']
+		# radius  = request.GET['radius']
+		circle = request.GET['circle']
+		traj = self.q.filter(geom__intersects = circle)
+		response = {}
+		response['lineset'] = serialize('geojson',traj)
+		return HttpResponse(
+			json.dumps(response),
+			content_type="application/json",
+			)
+
+
 
