@@ -27,7 +27,7 @@ class ExactSearchView(TrajSearchView):
 	
 	def get(self,request):
 		id = request.GET["search_id"]
-		traj = self.q.get(traj_id = id)
+		traj = TrajLine.objects.filter(traj_id = id)
 		points = TrajPoint.objects.filter(traj_id =id)
 		response = {}
 		response['line'] = serialize('geojson',traj)
@@ -46,10 +46,12 @@ class RangeSearchView(TrajSearchView):
 		# lat = request.GET['latitude']
 		# lng = request.GET['longitude']
 		# radius  = request.GET['radius']
-		circle = request.GET['circle']
-		traj = self.q.filter(geom__intersects = circle)
+		geo = request.GET['geo']
+		traj = self.q.filter(geom__intersects = geo)
+		count = traj.count()
 		response = {}
 		response['lineset'] = serialize('geojson',traj)
+		response['count'] = count 
 		return HttpResponse(
 			json.dumps(response),
 			content_type="application/json",

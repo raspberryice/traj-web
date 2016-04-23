@@ -11,5 +11,10 @@ urlpatterns = [
     	regex=r'^search/id$',
     	view = views.ExactSearchView.as_view(),
     	name = "search_by_id"
-    	)
+    	),
+      url(
+        regex=r'^search/range$',
+        view = views.RangeSearchView.as_view(),
+        name = "search_by_range"
+        )
 ]
