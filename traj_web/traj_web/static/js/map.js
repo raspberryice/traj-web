@@ -103,6 +103,7 @@ function search_by_range(geojson){
 	});
 };
 
+
 $('#point-search-form').on('submit',function(e){
 	e.preventDefault();
 		// var geo = $('#geo').val();
