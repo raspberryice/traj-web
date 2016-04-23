@@ -42,12 +42,9 @@ class ExactSearchView(TrajSearchView):
 
 
 class RangeSearchView(TrajSearchView):
-	def get(self,request):
-		# lat = request.GET['latitude']
-		# lng = request.GET['longitude']
-		# radius  = request.GET['radius']
-		circle = request.GET['circle']
-		traj = self.q.filter(geom__intersects = circle)
+	def post(self,request):
+		geo = request.POST['geo']
+		traj = self.q.filter(geom__intersects = geo)
 		response = {}
 		response['lineset'] = serialize('geojson',traj)
 		return HttpResponse(
