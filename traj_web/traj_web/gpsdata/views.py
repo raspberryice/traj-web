@@ -4,7 +4,10 @@ from django.views.generic import View
 from django.http import HttpResponse
 from django.core.serializers import serialize
 from django.contrib.gis.db.models.functions import AsGeoJSON
+from django.contrib.gis.measure import Distance,D
+from django.db.models import Q
 import json
+from datetime import datetime 
 
 
 from .models import TrajPoint,TrajLine 
@@ -43,13 +46,21 @@ class ExactSearchView(TrajSearchView):
 
 class RangeSearchView(TrajSearchView):
 	def get(self,request):
-		# lat = request.GET['latitude']
-		# lng = request.GET['longitude']
-		# radius  = request.GET['radius']
+	
 		geo = request.GET['geo']
-		traj = self.q.filter(geom__intersects = geo)
+		dis = request.GET['dis']
+
+		traj = self.q.filter(geom__distance_lte = (geo,D(m=dis)))
 		count = traj.count()
 		response = {}
+		if (request.GET['has_time']=='true'):
+			timeStartStr = request.GET['start_time']
+			timeStart = datetime.strptime(timeStartStr,'%H:%M')
+			timeEndStr =request.GET['end_time'] 
+			timeEnd = datetime.strptime(timeEndStr,'%H:%M')
+			traj = traj.filter(Q(start_time__range=(timeStart,timeEnd))|Q(end_time__range=(timeStart,timeEnd)))
+			count = traj.count()
+		
 		response['lineset'] = serialize('geojson',traj)
 		response['count'] = count 
 		return HttpResponse(

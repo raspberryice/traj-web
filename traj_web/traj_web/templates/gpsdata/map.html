@@ -40,12 +40,13 @@
 				</form>
 			</div>
 		    <div role="tabpanel" class="tab-pane" id="range">
-		    	<h3> Circular Range </h3>
+		    	<h3> Search by circular range </h3>
+		    	<p id = "range-results"></p> 
 				<p>Click on any point in the map to select.</p>
 				<form class="form-horizontal" id="point-search-form">
 					{% csrf_token %}
 					<div class="form-group">
-						<label class="col-sm-3 control-label"> latitude</label>
+						<label class="col-sm-3 control-label"> Latitude</label>
 						<div class="col-sm-9">
 						<input type = "number" class="form-control" readonly id="point-latitude">
 						</div> 
@@ -65,6 +66,28 @@
 					<div class="hidden">
 						<input type="text" id = "geo">
 					</div>
+					<div class='form-group'>
+					<h4 class="col-sm-8">Filter by time </h4>
+						<label class="col-sm-4 control-label">
+							<input type="checkbox" id="time-toggle" value="" checked = 'true'>
+							Enable </label> 
+						  
+					</div>
+					<div id="time-filter">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Start</label>
+						<div class="col-sm-9">
+							<input type="time" class="form-control"  id = "start-time">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">End</label>
+						<div class="col-sm-9">
+							<input type="time" class="form-control"  id = "end-time">
+						</div>
+					</div>
+				    </div>
+
 					<div class="form-group">
 						<div class="col-offset-3 col-sm-9">
 						<button type="submit" class="btn btn-default">Search</button> 
@@ -73,7 +96,33 @@
 				</form>
 				<!--TODO add polygon range -->
 		    </div>
-		    <div role="tabpanel" class="tab-pane" id="knn">...</div>
+		    <div role="tabpanel" class="tab-pane" id="knn">
+		    	<h3>K nearest neighbors search </h3>
+		    	<form class="form-horizontal" id = "knn-search-form">
+		    			{% csrf_token %}
+					<div class="form-group">
+						<label class="col-sm-3 control-label"> Target ID</label>
+						<div class="col-sm-9">
+						<input type = "number" class="form-control" id="knn-id">
+						</div> 
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label"> Number of results</label>
+						<div class="col-sm-9">
+						<input type = "number" class="form-control" id="knn-k">
+						</div> 
+					</div>
+
+					<div class="form-group">
+						<div class="col-offset-3 col-sm-9">
+						<button type="submit" class="btn btn-default">Search</button> 
+						</div>
+					</div>
+				</form>
+
+
+
+		    </div>
 		    <div role="tabpanel" class="tab-pane" id="play">...</div>
 		  </div>
 
