@@ -12,8 +12,6 @@ from datetime import datetime
 
 from .models import TrajPoint,TrajLine 
 
-# Create your views here.
-
 class MapView(View):
 	model = TrajPoint
 
@@ -67,6 +65,23 @@ class RangeSearchView(TrajSearchView):
 			json.dumps(response),
 			content_type="application/json",
 			)
+
+
+
+class LoadPointView(View):
+	model=TrajPoint
+
+	def get(self,request):
+		id = request.GET['play_id']
+		points = TrajPoint.objects.filter(traj_id=id).order_by('create_time')
+		response = {}
+		response['points'] = serialize('geojson',points)
+		return HttpResponse(
+			json.dumps(response),
+			content_type="application/json",
+			)
+ 
+
 
 
 

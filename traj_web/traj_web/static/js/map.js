@@ -107,6 +107,7 @@ function search_by_range(geojson){
 			if (json.count>0){
 				var lineset = JSON.parse(json.lineset);//as an object
 				L.geoJson(lineset).addTo(mymap);
+
 			}
 			
 		},
@@ -133,3 +134,48 @@ $('#time-toggle').on('change',function(e){
 		$('#time-filter').hide();
 	}
 })
+
+//--------------------play route --------------------
+//custom circle marker 
+var geojsonMarkerOptions = {
+    radius: 3,
+    fillColor: "#AF002A",
+    color: "#000",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
+};
+//load points 
+function load_points(play_id){
+	$.ajax({
+		url:"play/load",
+		type:"GET",
+		data:{
+			"csrfmiddlewaretoken":$("input[name=csrfmiddlewaretoken]").val(),
+			"play_id":play_id,
+		},
+		success:function(json){
+			$('#point-load-status').text('Points loaded.');
+			var pointset = JSON.parse(json.points);
+			var pointLayer = L.geoJson(pointset,{
+				pointToLayer:function(feature,latlng){
+					return L.circleMarker(latlng,geojsonMarkerOptions);
+				}
+			}).addTo(mymap);
+			mymap.fitBounds(pointLayer.getBounds()); 
+		},
+		error:function(xhr,errmsg,err){
+			console.log(xhr.status + ': '+xhr.responseText);
+		},
+	});
+};
+
+$('#play-search-form').on('submit',function(e){
+	e.preventDefault();
+	if ($('#play-id').val() == ''){
+		alert("Please enter a valid integer.");
+	}
+	else{
+		load_points(parseInt($('#play-id').val()));
+	}
+});

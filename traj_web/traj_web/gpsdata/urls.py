@@ -17,4 +17,9 @@ urlpatterns = [
         view = views.RangeSearchView.as_view(),
         name = "search_by_range"
         ),
+    url(
+        regex = r'^play/load$',
+        view = views.LoadPointView.as_view(),
+        name = "load_points"
+        ),
 ]
