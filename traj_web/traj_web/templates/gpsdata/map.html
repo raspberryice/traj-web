@@ -3,6 +3,8 @@
 {% block css %}
  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+ 
+ <link href="{% static 'css/leaflet.timeline.min.css' %}" rel="stylesheet">
  <link href="{% static 'css/project.css' %}" rel="stylesheet">
 {% endblock css %}
 {% block content %}
@@ -140,18 +142,18 @@
 					</div>
 				</form>
 				<p id = "play-load-status"> </p>
-				<h4> Replay </h4>
+				<h4> Replay Settings</h4>
 				<form class="form-horizontal" id = "play-form">
 		    			{% csrf_token %}
 					<div class="form-group">
-						<label class="col-sm-3 control-label"> Time interval</label>
+						<label class="col-sm-3 control-label"> Total play time</label>
 						<div class="col-sm-9">
 						<input type = "number" class="form-control" id="play-id">
 						</div> 
 					</div>
 					<div class="form-group">
 						<div class="col-offset-3 col-sm-9">
-						<button type="submit" class="btn btn-default">Start/Pause</button> 
+						<button type="submit" class="btn btn-default">Apply Settings</button> 
 						</div>
 					</div>
 				</form>
@@ -170,5 +172,6 @@
   <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <!--  // <script src="http://www.mapquestapi.com/sdk/leaflet/v2.s/mq-map.js?key=6OnyIRdDcWYkr9GiodtAGpMKUFIBUOHG"></script> -->
+  <script src="{% static 'js/leaflet.timeline.min.js' %}"></script>
   <script src="{% static 'js/map.js' %}"></script>
 {% endblock javascript %}

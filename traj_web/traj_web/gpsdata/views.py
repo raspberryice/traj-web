@@ -74,8 +74,11 @@ class LoadPointView(View):
 	def get(self,request):
 		id = request.GET['play_id']
 		points = TrajPoint.objects.filter(traj_id=id).order_by('create_time')
+		traj = TrajLine.objects.get(traj_id=id)
 		response = {}
 		response['points'] = serialize('geojson',points)
+		response['start'] = datetime.strftime(traj.start_time,"%x %X")
+		response['end'] = datetime.strftime(traj.end_time,"%x %X")
 		return HttpResponse(
 			json.dumps(response),
 			content_type="application/json",

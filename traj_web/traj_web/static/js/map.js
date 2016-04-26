@@ -3,7 +3,23 @@
 
 //add map layer
 var mymap = L.map('shanghaimap').setView([31.22,121.49], 13);
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(mymap);
+var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png')
+osm.addTo(mymap);
+// var timelineControl = L.timelineSliderControl();
+var timelineControl = L.timelineSliderControl({
+	formatOutput: function(date){
+		try{
+		return new Date(date).toISOString();
+	}
+	catch (ex) {
+		console.error("Error converting date",ex.message);
+		return '';
+	}
+
+	}
+});
+timelineControl.addTo(mymap);
+var currentTimeline;
 
 //selection
 var selection = [];
@@ -145,6 +161,27 @@ var geojsonMarkerOptions = {
     opacity: 1,
     fillOpacity: 0.8
 };
+
+function create_timeline(data){
+	var timeline = L.timeline(data,{
+				getInterval:function(feature){
+					var create_time = new Date(feature.properties.create_time);
+					return {
+						start: create_time.getTime(),
+						end: new Date(create_time.getTime() + 60000),//last for 1 minute 
+					}
+				},
+				pointToLayer:function(feature,latlng){
+					return L.circleMarker(latlng,geojsonMarkerOptions);
+				}
+			});
+	
+			
+	timeline.addTo(mymap);
+	return timeline;
+	// mymap.fitBounds(timeline.getBounds()); 
+}
+
 //load points 
 function load_points(play_id){
 	$.ajax({
@@ -155,20 +192,20 @@ function load_points(play_id){
 			"play_id":play_id,
 		},
 		success:function(json){
-			$('#point-load-status').text('Points loaded.');
+			$('#play-load-status').text('Points loaded.');
 			var pointset = JSON.parse(json.points);
-			var pointLayer = L.geoJson(pointset,{
-				pointToLayer:function(feature,latlng){
-					return L.circleMarker(latlng,geojsonMarkerOptions);
-				}
-			}).addTo(mymap);
-			mymap.fitBounds(pointLayer.getBounds()); 
+			console.log(pointset);
+			//remove old timeline and add new one
+			timelineControl.removeTimelines(currentTimeline);
+			currentTimeline = create_timeline(pointset);
+			timelineControl.addTimelines(currentTimeline);
 		},
 		error:function(xhr,errmsg,err){
 			console.log(xhr.status + ': '+xhr.responseText);
 		},
 	});
 };
+
 
 $('#play-search-form').on('submit',function(e){
 	e.preventDefault();
