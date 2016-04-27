@@ -16,10 +16,11 @@
 		<div>
 		  <!-- Nav tabs -->
 		  <ul class="nav nav-tabs" role="tablist">
-		    <li role="presentation" class="active"><a href="#exact" aria-controls="exact" role="tab" data-toggle="tab">Exact Search</a></li>
+		    <li role="presentation" class="active"><a href="#exact" aria-controls="exact" role="tab" data-toggle="tab">ID</a></li>
 		    <li role="presentation"><a href="#range" aria-controls="range" role="tab" data-toggle="tab">Range</a></li>
 		    <li role="presentation"><a href="#knn" aria-controls="knn" role="tab" data-toggle="tab">KNN</a></li>
 		    <li role="presentation"><a href="#play" aria-controls="play" role="tab" data-toggle="tab">Replay</a></li>
+		    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
 		  </ul>
 
 		  <!-- Tab panes -->
@@ -121,28 +122,26 @@
 						</div>
 					</div>
 				</form>
-
-
-
 		    </div>
 		    <div role="tabpanel" class="tab-pane" id="play">
 		    	<h3>Load trajectory points and replay</h3>
-		    	<form class="form-horizontal" id = "play-search-form">
-		    			{% csrf_token %}
-					<div class="form-group">
-						<label class="col-sm-3 control-label"> Target ID</label>
-						<div class="col-sm-9">
-						<input type = "number" class="form-control" id="play-id">
-						</div> 
-					</div>
-					<div class="form-group">
-						<div class="col-offset-3 col-sm-9">
-						<button type="submit" class="btn btn-default">Load points</button> 
-						</div>
-					</div>
-				</form>
+		    	<h4> Selection</h4>
+		    	<ul class="list-group" id="selection-list">
+		    	</ul>
+		    	   <div class="input-group">
+				      <input id="selection-id" type="number" class="form-control" placeholder="traj id">
+				      <span class="input-group-btn">
+				        <button class="btn btn-default" type="button" id="add-selection">Add</button>
+				      </span>
+				    </div><!-- /input-group -->
+
+		   
+				<button id="load-button" class="btn btn-default">Load points</button> 
 				<p id = "play-load-status"> </p>
-				<h4> Replay Settings</h4>
+				
+		    </div>
+		    <div role="tabpanel" class="tab-pane" id="settings">
+		    	<h4> Replay Settings</h4>
 				<form class="form-horizontal" id = "play-form">
 		    			{% csrf_token %}
 					<div class="form-group">
@@ -157,7 +156,6 @@
 						</div>
 					</div>
 				</form>
-
 		    </div>
 		  </div>
 

@@ -43,7 +43,6 @@ function search_by_id(search_id){
 		success:function(json){
 			var line = JSON.parse(json.line);//as an object
 			add_geojson_crop(line);
-			//what about points?
 		},
 		error:function(xhr,errmsg,err){
 			console.log(xhr.status + ': '+xhr.responseText);
@@ -122,7 +121,14 @@ function search_by_range(geojson){
 			$('#range-results').text(json.count + " results found.");
 			if (json.count>0){
 				var lineset = JSON.parse(json.lineset);//as an object
-				L.geoJson(lineset).addTo(mymap);
+				console.log(lineset);
+				L.geoJson(lineset,{
+					onEachFeature:function(feature,layer){
+						 if (feature.properties && feature.properties.traj_id) {
+						        layer.bindPopup(feature.properties.traj_id.toString());
+						    }
+					}
+				}).addTo(mymap);
 
 			}
 			
@@ -188,15 +194,13 @@ function load_points(play_id){
 		url:"play/load",
 		type:"GET",
 		data:{
-			"csrfmiddlewaretoken":$("input[name=csrfmiddlewaretoken]").val(),
 			"play_id":play_id,
 		},
 		success:function(json){
-			$('#play-load-status').text('Points loaded.');
 			var pointset = JSON.parse(json.points);
 			console.log(pointset);
 			//remove old timeline and add new one
-			timelineControl.removeTimelines(currentTimeline);
+			// timelineControl.removeTimelines(currentTimeline);
 			currentTimeline = create_timeline(pointset);
 			timelineControl.addTimelines(currentTimeline);
 		},
@@ -206,13 +210,50 @@ function load_points(play_id){
 	});
 };
 
+//search for a list of trajectories 
 
-$('#play-search-form').on('submit',function(e){
-	e.preventDefault();
-	if ($('#play-id').val() == ''){
-		alert("Please enter a valid integer.");
+// $('#play-search-form').on('submit',function(e){
+// 	e.preventDefault();
+// 	if ($('#play-id').val() == ''){
+// 		alert("Please enter a valid integer.");
+// 	}
+// 	else{
+// 		load_points(parseInt($('#play-id').val()));
+//		$('#play-load-status').text('Points loaded.');
+// 	}
+// });
+ 
+$('#add-selection').on('click',function(e){
+	var id = $('#selection-id').val();
+	if (id==''){
+		alert('Please enter a valid integer.');
 	}
 	else{
-		load_points(parseInt($('#play-id').val()));
+		var new_item = $("<li class='list-group-item'><span>"
+		    + id
+			+ "</span><a class='glyphicon glyphicon-remove pull-right delete-selection' aria-hidden='true'></a></li>");
+
+		$('#selection-list').append(new_item);
+		new_item.find('.delete-selection').on('click',delete_selection);
+		selection.push(parseInt(id));
+		console.log(selection);
+	}
+});
+
+function delete_selection(e){
+	var item = $(this).parent();
+	var id = item.find('span').text();
+	selection.splice(selection.indexOf(parseInt(id)),1);
+	console.log(selection);
+	item.remove();
+}
+
+$('.delete-selection').on('click',delete_selection);
+
+$('#load-button').on('click',function(e){
+	for (i=0;i<selection.length;i++){
+		load_points(selection[i]);
+		$('#play-load-status').text('Traj' + selection[i] + 'points loaded.');
+
 	}
 });
