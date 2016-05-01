@@ -29,13 +29,11 @@ class ExactSearchView(TrajSearchView):
 	def get(self,request):
 		id = request.GET["search_id"]
 		traj = TrajLine.objects.filter(traj_id = id)
-		points = TrajPoint.objects.filter(traj_id =id)
 		response = {}
 		response['line'] = serialize('geojson',traj)
 		#TODO serialize time 
 		# response['start_time'] = traj.start_time
 		# response['end_time'] = traj.end_time 
-		response['points'] = serialize('geojson',points)
 		return HttpResponse(
 			json.dumps(response),
 			content_type="application/json",
@@ -56,6 +54,7 @@ class RangeSearchView(TrajSearchView):
 			timeStart = datetime.strptime(timeStartStr,'%H:%M')
 			timeEndStr =request.GET['end_time'] 
 			timeEnd = datetime.strptime(timeEndStr,'%H:%M')
+			#TODO: time range not datetime range 
 			traj = traj.filter(Q(start_time__range=(timeStart,timeEnd))|Q(end_time__range=(timeStart,timeEnd)))
 			count = traj.count()
 		

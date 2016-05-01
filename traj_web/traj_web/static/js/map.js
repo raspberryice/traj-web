@@ -203,6 +203,7 @@ function load_points(play_id){
 			// timelineControl.removeTimelines(currentTimeline);
 			currentTimeline = create_timeline(pointset);
 			timelineControl.addTimelines(currentTimeline);
+			//TODO:remove timelines separately
 		},
 		error:function(xhr,errmsg,err){
 			console.log(xhr.status + ': '+xhr.responseText);
